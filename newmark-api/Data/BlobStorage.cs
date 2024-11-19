@@ -17,20 +17,18 @@ class BlobStorage : IStorage
         _configuration = configuration;
     }
 
-    private readonly string blobServiceClientName = @"https://nmrkpidev.blob.core.windows.net";
-    private readonly string blobContainerName = "/dev-test";
-    private readonly string blobName = "/dev-test.json";
-    private readonly string sts = "?sp=r&st=2024-10-28T10:35:48Z&se=2025-10-28T18:35:48Z&spr=https&sv=2022-11-02&sr=b&sig=bdeoPWtefikVgUGFCUs4ihsl22ZhQGu4%2B4cAfoMwd4k%3D";
-
     public async Task<List<Property>> ReadDataAsync()
     {
+        var stsBase64 = _configuration["AppSettings:STS"];
+        var bytes  = Convert.FromBase64String(stsBase64);
+        var sts = Encoding.UTF8.GetString(bytes);
         
         try 
         {
             string url = new StringBuilder(_configuration["AppSettings:BlobClientServiceName"])
                                 .Append(_configuration["AppSettings:BlobContainerName"])
                                 .Append(_configuration["AppSettings:BlobName"])
-                                .Append(_configuration["AppSettings:STS"])
+                                .Append(sts)
                                 .ToString();
 
             
