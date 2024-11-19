@@ -8,10 +8,13 @@ using System.Text.Json;
 class BlobStorage : IStorage
 {
     private readonly ILogger<BlobStorage> _logger;
+    private readonly IConfiguration _configuration;
 
-    public BlobStorage(ILogger<BlobStorage> logger)
+
+    public BlobStorage(ILogger<BlobStorage> logger, IConfiguration configuration)
     {
         _logger = logger;
+        _configuration = configuration;
     }
 
     private readonly string blobServiceClientName = @"https://nmrkpidev.blob.core.windows.net";
@@ -21,12 +24,13 @@ class BlobStorage : IStorage
 
     public async Task<List<Property>> ReadDataAsync()
     {
+        
         try 
         {
-            string url = new StringBuilder(blobServiceClientName)
-                                .Append(blobContainerName)
-                                .Append(blobName)
-                                .Append(sts)
+            string url = new StringBuilder(_configuration["AppSettings:BlobClientServiceName"])
+                                .Append(_configuration["AppSettings:BlobContainerName"])
+                                .Append(_configuration["AppSettings:BlobName"])
+                                .Append(_configuration["AppSettings:STS"])
                                 .ToString();
 
             
