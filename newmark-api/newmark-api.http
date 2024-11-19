@@ -1,0 +1,6 @@
+@newmark_api_HostAddress = http://localhost:5200
+
+GET {{newmark_api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
